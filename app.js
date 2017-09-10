@@ -1,6 +1,3 @@
-// NEED TO USE BCRYPTJS FOR USERS TO "CREATE NEW ACCOUNT"
-// NEED TO USE PASSPORT TO AUTHENTICATE RETURNING USERS (PASSPORT DOES NOT HANDLE USER REGISTRATION)
-//   Passport is an authentication module for EXPRESS.
 const express = require('express');
 const session = require('express-session');
 const flash = require('express-flash-messages');
@@ -16,15 +13,13 @@ const bluebird = require('bluebird');
 mongoose.Promise = bluebird;
 
 const userSchema = new mongoose.Schema({
-  // id : {type: String},
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
   username: { type: String, required: true },
-  // password: { type: String, required: true },
   passwordHash: { type: String }
 });
 
-// Example of safe storage password with Mongoose
+//mongoose password storage
 
 userSchema.methods.setPassword = function (password) {
   const hash = bcrypt.hashSync(password, 8);
@@ -56,20 +51,8 @@ userSchema.statics.authenticate = function(username, password, done) {
 const User = mongoose.model('User', userSchema);
 
 
-// EXAMPLE: LOG USERS IN WITH PASSPORT
-
-// install packages passport and passport-local
-  // npm install passport passport-local --save
-  // npm install passport --save
-
-// Require the packages
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-
-  // Configure passport to let it know how to look up and authenticate a user.
-  // Below uses the securly storing passwords User model from the BCRYPTJS example above
-
-// LocalStrategy is an authentication strategy using USERNAME and PASSWORD
 
 passport.use(new LocalStrategy(
     function(username, password, done) {
@@ -87,7 +70,6 @@ passport.use(new LocalStrategy(
         })
     }));
 
-// Serialize and deserialize store user info in the session and pull it back out again
   passport.serializeUser(function(user, done) {
     console.log(user);
     console.log(user.id);
@@ -100,9 +82,7 @@ passport.use(new LocalStrategy(
       });
   });
 
-// Add Express-Session and Passport to middleware and express-flash-messages
 
-// view engine setup
 app.engine('mustache', mustache());
 app.set('view engine', 'mustache');
 app.set('views','./views');
@@ -167,13 +147,11 @@ app.get('/', requireLogin, (req, res) => {
   });
 });
 
-// With all of this you are ready to log in users!
-
-// EXAMPLE: HOW TO ACCESS THE CURRENT USER
-
-// Passport puts the current user in req.user for us automatically. You may need this user in your views. Instead of passing it to every res.render statement, storing it in res.locals will make it available in all views. A simple middleware function will do this for us.
-
 app.use(function (req, res, next) {
   res.locals.user = req.user;
   next();
 })
+
+
+app.listen(3000, function () {
+  console.log('app running, port 3000; here....we....gooooo')});
