@@ -1,8 +1,7 @@
 const express = require('express');
 const session = require('express-session');
-const flash = require('express-flash-messages');
-
-const app = express();
+// const flash = require('express-flash-messages')
+// const app = express();
 const mustache = require('mustache-express');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb');
@@ -11,6 +10,16 @@ const bcrypt = require('bcryptjs');
 
 const bluebird = require('bluebird');
 mongoose.Promise = bluebird;
+
+app.engine('mustache', mustache());
+app.set('view engine', 'mustache');
+app.set('views','./views');
+
+app.use(session({
+  secret: 'seeeeeeecreeeeeettt',
+  resave: false,
+  saveUninitialized: true,
+}));
 
 const userSchema = new mongoose.Schema({
   firstname: { type: String, required: true },
@@ -24,13 +33,13 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.setPassword = function (password) {
   const hash = bcrypt.hashSync(password, 8);
   this.passwordHash = hash;
-}
+};
 
 userSchema.methods.authenticate = function (password) {
   console.log(password);
   console.log(this.passwordHash);
   return bcrypt.compareSync(password, this.passwordHash);
-}
+};
 
 
 
@@ -39,13 +48,13 @@ userSchema.statics.authenticate = function(username, password, done) {
         username: username
     }, function(err, user) {
         if (err) {
-            done(err, false)
+            done(err, false);
         } else if (user && user.authenticate(password)) {
-            done(null, user)
+            done(null, user);
         } else {
-            done(null, false)
+            done(null, false);
         }
-    })
+    });
 };
 
 const User = mongoose.model('User', userSchema);
@@ -58,73 +67,72 @@ passport.use(new LocalStrategy(
     function(username, password, done) {
         User.authenticate(username, password, function(err, user) {
             if (err) {
-                return done(err)
+                return done(err);
             }
             if (user) {
-                return done(null, user)
+                return done(null, user);
             } else {
                 return done(null, false, {
                     message: "There is no user with that username and password."
-                })
+                });
             }
-        })
+        });
     }));
 
-  passport.serializeUser(function(user, done) {
-    console.log(user);
-    console.log(user.id);
-      done(null, user.id);
-  });
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(flash());
+    app.use(express.static('public'));
 
-  passport.deserializeUser(function(id, done) {
-      User.findById(id, function(err, user) {
-          done(err, user);
-      });
-  });
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: false }));
+
+  // passport.serializeUser(function(user, done) {
+  //   User.findById(user)
+  //     .then(user => done(null, user))
+  //     .catch(done);
+  // });
+  //
+  // passport.deserializeUser(function(id, done) {
+  //   User.findById(id)
+  //       .then(user => done(null, user))
+  //       catch(done)
+  // });
 
 
-app.engine('mustache', mustache());
-app.set('view engine', 'mustache');
-app.set('views','./views');
+  // passport.deserializeUser(function(id, done) {
+  //     User.findById(id, function(err, user) {
+  //         done(err, user);
+  //     });
+  // });
 
-app.use(session({
-  secret: 'seeeeeeecreeeeeettt',
-  resave: false,
-  saveUninitialized: true,
-}));
 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
-app.use(express.static('public'));
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
 
 // middleware that requires a user to be authenticated
 const requireLogin = (req, res, next) => {
-  console.log(req.user);
   if (req.user) {
     next();
   } else {
-    res.redirect('/login');
+    res.redirect('/loginForm');
   }
 };
 
-// Create login form (in handlebars file) and POST endpoint to submit login form to
-
-app.get('/login', function(req, res) {
+app.get('/loginForm', function(req, res) {
     res.render("loginForm", {
         messages: res.locals.getMessages()
     });
 });
 
-app.post('/login', passport.authenticate('local', {
+app.post('/loginForm', function(req,res){
+  passport.authenticate('local', {
     successRedirect: '/home',
     failureRedirect: '/createAccount',
     failureFlash: true
-}))
+
+  })(req,res);
+});
+
 
 app.get('/createAccount', function(req, res) {
     res.render("createAccount", {
@@ -137,11 +145,11 @@ app.post('/createAccount', (req, res) => {
   user.setPassword(req.body.password);
 
   user.save()
-    .then(() => res.redirect('/login'))
+    .then(res.redirect('/loginForm'))
     .catch(err => console.log(err));
 });
 
-app.get('/', requireLogin, (req, res) => {
+app.get('/home', requireLogin, (req, res) => {
   res.render('home', {
       messages: res.locals.getMessages()
   });
@@ -150,8 +158,9 @@ app.get('/', requireLogin, (req, res) => {
 app.use(function (req, res, next) {
   res.locals.user = req.user;
   next();
-})
+});
 
 
 app.listen(3000, function () {
-  console.log('app running, port 3000; here....we....gooooo')});
+  console.log('app running, port 3000; here....we....gooooo');
+});
