@@ -25,10 +25,10 @@
 
       <!-- The form will show up on the browser for the user -->
       <p class="formTitle">To manage your Snippets, please login below</p>
-      <form id="loginForm" action="/login" method="post">
+      <form id="loginForm" action="/loginForm" method="post">
         <input class="input" type="text" name="username" placeholder="Username" value="snippetText"/>
         <input class="input" type="password" name="password" placeholder="Password" value=""/>
-        <input class="button" type="submit" name="Submit" value="password"/>
+        <input class="button" type="submit" name="Submit" value=""/>
         <p class="message">Not registered? <a href="/createAccount">Create an account</a></p>
       </form>
 
@@ -40,7 +40,7 @@
   </body>
 </html>
 
-<form class="loginID" action="/login" method="post">
-      <input type="text" name="loginID" value="loginID" placeholder="Type test here">
+<form class="loginID" action="/loginForm" method="post">
+      <input type="text" name="loginID" value="" placeholder="Type test here">
       <button type="submit" name="button">submit</button>
 </form>
