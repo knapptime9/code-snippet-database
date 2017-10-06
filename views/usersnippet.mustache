@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Code Snippet Page</title>
+  <link rel="stylesheet" type="text/css" href="stylesheets/styles.css" />
+  <link rel="stylesheet" type="text/css" href="/stylesheets/styles.css" />
+</head>
+<body>
+<div class="nav">
+    <div>
+      {{#snippet}}
+      <a href="/{{_id}}/snippet/">{{title}}</a>
+      {{/snippet}}
+      {{#snippet.length}}
+      <form action="/searchLang" method="post" name="mySubmitForm">
+        <select name="lang">
+        <option value="js">Javascript</option>
+        <option value="react">React</option>
+        <option value="ruby">Ruby</option>
+        <option value="nodejs">Nodejs</option>
+        <option value="java">Java</option>
+        <option value="other">Other</option>
+        </select>
+        <button type="submit">Search for snippets by language.</button>
+      </form>
+      <form action="/searchTag" method="post" name="mySubmitForm">
+        <input type="text" id="title" name="tag" required />
+        <button type="submit">Search for snippets by tag.</button>
+      </form>
+      {{/snippet.length}}
+      {{^snippet}}
+      <p>No Snippets Found.</p>
+      <a href="/addsnippet/">Add A Snippet</a>
+      <a href="/usersnippet/">Reload Snippets</a>
+      {{/snippet}}
+    </div>
+</div>
+  <br>
+  <p>This site holds and sorts code snippets for the user.</p>
+  <form action="/" method="post" name="mySubmitForm">
+    <button type="submit">Home Page</button>
+  </form>
+  <script type="text/javascript" src="main.js"></script>
+</body>

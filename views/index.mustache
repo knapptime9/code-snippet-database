@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Code Snippet Page</title>
+  <link rel="stylesheet" type="text/css" href="stylesheets/styles.css" />
+  <link rel="stylesheet" type="text/css" href="/stylesheets/styles.css" />
+</head>
+<body>
+<div class="nav">
+  {{#user}}
+    <div>
+      <p>You are logged in as: <em>{{ username }}</em></p>
+    </div>
+    <div>
+      <a href="/addsnippet/">Add A Snippet</a>
+      <a href="/usersnippet/">View Your Snippets</a>
+      <a href="/logout/">Logout</a>
+    </div>
+  {{/user}}
+</div>
+<div class="nav">
+  {{^user}}
+  <div>
+    <p><a href="/login/">Login</a></div>
+  <div>
+    <p><a href="/register/">Register</a></p>
+  </div>
+  {{/user}}
+</div>
+  <br>
+
+</body>

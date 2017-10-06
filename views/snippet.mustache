@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <div class = 'wrapper'>
+      <h1>snippet</h1>
+      {{#snippet}}
+      <p>{{title}}</p>
+      <p>{{code}}</p>
+      <p>{{notes}}</p>
+      <p>{{lang}}</p>
+      <p>{{tags}}</p>
+      <form action="/addTag" method="post" name="mySubmitForm">
+        <input type="text" id="title" name="tag" required />
+        <button type="submit">Add A Tag.</button>
+      </form>
+      {{/snippet}}
+      <br />
+      <hr />
+      <a href="/addsnippet/">Add A Snippet</a>
+      <a href="/usersnippet/">View Your Snippets</a>
+      <a href="/logout/">Logout</a>
+      <a href="/">Index</a>
+  </div>
+  </body>
+</html>

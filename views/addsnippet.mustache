@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Code Snippet Add Page</title>
+  <link rel="stylesheet" type="text/css" href="stylesheets/styles.css" />
+  <link rel="stylesheet" type="text/css" href="/stylesheets/styles.css" />
+</head>
+<body>
+  <h1>Add snippet:</h1>
+  <form action="/add/" method="POST">
+    <fieldset>
+      <legend>New Snippet</legend>
+      <p>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" unique='true' required />
+      </p>
+      <p>
+        <label for="code">Snippet:</label>
+        <textarea name="code" rows="10" cols="20"></textarea>
+      </p>
+      <p>
+        <label for="notes">additional notes:</label>
+        <textarea name="notes" rows="10" cols="20"></textarea>
+      </p>
+      <select name="lang">
+      <option value="js">Javascript</option>
+      <option value="react">React</option>
+      <option value="ruby">Ruby</option>
+      <option value="nodejs">Nodejs</option>
+      <option value="java">Java</option>
+      <option value="other">Other</option>
+    </select>
+      <p>
+        <label for="tags">tags(use commas to separate):</label>
+        <input type="text" id="tags" name="tags" />
+      </p>
+      <p>
+        <button type="submit">Add snippet</button>
+      </p>
+    </fieldset>
+  </form>
+
+</body>

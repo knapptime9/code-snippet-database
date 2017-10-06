@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <div class = 'wrapper'>
+      <h1>Register</h1>
+      {{#messages.error}}
+      <div class="alert alert-danger" role="alert">
+        {{.}}
+      </div>
+      {{/messages.error}}
+      <form method="post" action = '/submit_registration/'>
+        <input type="text" id='username-input' name="username" placeholder="Username"/>
+        <input type="password" id='password-input' name="password" placeholder="Password"/>
+        <input type="password" id='password-input2' name="password2" placeholder="Password"/>
+        <input type="email" id='email-input' name="email" placeholder="Email"/>
+      <button type = 'submit'>Register</button>
+    </form>
+    <p><a href="/">Index</a></div>
+  </div>
+  </body>
+</html>
